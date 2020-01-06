@@ -7,8 +7,14 @@ const Project = mongoose.model('Project', ProjectSchema);
 const Task = mongoose.model('Task', TaskSchema);
 
 class ProjectController {
-    public getProjects (req: Request, res: Response) {           
+    public getProjects (req: Request, res: Response) {      
         Project.find()
+            .populate('tasks')
+            .exec((err, project) => (err) ? res.send(err) : res.json(project));
+    }
+
+    public getProjectsByUser (req: Request, res: Response) {      
+        Project.find({ userId: req.params.id })
             .populate('tasks')
             .exec((err, project) => (err) ? res.send(err) : res.json(project));
     }

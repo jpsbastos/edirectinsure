@@ -2,10 +2,10 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import { Router } from "./src/routes/router";
 import * as mongoose from "mongoose";
-import { errorHandler } from "helpers/error-handler";
+import { errorHandler } from "./src/helpers/error-handler";
+import { JwtHelper } from "./src/helpers/jwt-handler";
+import { configuration } from "./configuration";
 
-const MONGO_URL = 'mongodb+srv://jpsbastos:eHKT3pHAx@cluster0-fvvjr.mongodb.net/test?retryWrites=true&w=majority';
-const PORT = 3000;
 const app: express.Application = express();
 const routePrv: Router = new Router();
 
@@ -13,15 +13,19 @@ const routePrv: Router = new Router();
 app.use(bodyParser.json());
 //support application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: false }));
-mongoose.connect(MONGO_URL, {
+mongoose.connect(configuration.connectionString, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
 });
+
+// use JWT auth to secure the api
+app.use(JwtHelper.jwt());
+
 routePrv.routes(app)
 
 // global error handler
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-    console.log('Express server listening on port ' + PORT);
+app.listen(configuration.port, () => {
+    console.log('Express server listening on port ' + configuration.port);
 })

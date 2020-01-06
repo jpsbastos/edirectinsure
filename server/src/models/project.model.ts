@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import { TaskSchema } from './task.model';
 
 const Schema = mongoose.Schema;
 
@@ -9,12 +8,13 @@ export const ProjectSchema = new Schema({
         required: 'Enter a name'
     },
     userId: {
-        required: false,
+        immutable: true,
+        required: 'Enter a valid user id',
         type: Schema.Types.ObjectId
     },
     creation_date: {
         type: Date,
         default: Date.now
     },
-    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref:'Task' }],
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
 });

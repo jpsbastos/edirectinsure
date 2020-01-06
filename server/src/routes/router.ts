@@ -1,5 +1,6 @@
 import { Application, Request, Response } from "express";
 import { projectController } from './../controllers/project.controller';
+import { userController } from './../controllers/user.controller';
 
 export class Router {       
     public routes(app: Application): void {          
@@ -37,5 +38,18 @@ export class Router {
         .put(projectController.updateTask)
         // DELETE endpoint
         .delete(projectController.deleteTask)
+
+        app.route('/users/:id/projects').get(projectController.getProjectsByUser)
+
+        // User
+        app.route('/users/authenticate').post(userController.authenticate)
+        app.route('/users/register').post(userController.register)
+        app.route('/users').get(userController.getAll)
+        app.route('/users/current').get(userController.getCurrent)
+
+        app.route('/users/:id') 
+            .get(userController.getById)
+            .put(userController.update)
+            .delete(userController._delete)
     }
 }
